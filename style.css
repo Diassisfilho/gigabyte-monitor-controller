@@ -1,0 +1,246 @@
+/* Estilo Moderno - Inspirado no Design do ChatGPT / Adwaita Dark */
+
+window {
+    background-color: #0d1117;
+    color: #e6edf3;
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+/* Barra Lateral / Sidebar */
+.sidebar {
+    background-color: #0b0f14;
+    border-right: 1px solid #161b22;
+    padding: 24px 16px;
+}
+
+.sidebar-title {
+    font-size: 16px;
+    font-weight: bold;
+    color: #ffffff;
+}
+
+.sidebar-subtitle {
+    font-size: 12px;
+    color: #7d8590;
+}
+
+.nav-button {
+    background: transparent;
+    color: #8b949e;
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 14px;
+    font-weight: 500;
+    box-shadow: none;
+    border: none;
+    transition: all 150ms ease;
+}
+
+.nav-button:hover {
+    background-color: #161b22;
+    color: #f0f6fc;
+}
+
+.nav-button.active {
+    background-color: #1f293d;
+    color: #58a6ff;
+    font-weight: 600;
+}
+
+.device-badge-box {
+    margin-top: auto;
+    padding-top: 16px;
+}
+
+.device-name {
+    font-size: 13px;
+    font-weight: bold;
+    color: #c9d1d9;
+}
+
+.device-specs {
+    font-size: 11px;
+    color: #6e7681;
+}
+
+/* Área de Conteúdo */
+.content-area {
+    padding: 28px 32px 16px 32px;
+    background-color: #0d1117;
+}
+
+.page-title {
+    font-size: 24px;
+    font-weight: 800;
+    color: #ffffff;
+    letter-spacing: -0.5px;
+}
+
+.page-subtitle {
+    font-size: 13px;
+    color: #8b949e;
+    margin-bottom: 8px;
+}
+
+.status-badge {
+    background-color: #122822;
+    color: #3fb950;
+    border: 1px solid #234e3f;
+    border-radius: 20px;
+    padding: 4px 12px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+/* Cards em Grid */
+.feature-card {
+    background-color: #161b22;
+    border: 1px solid #21262d;
+    border-radius: 14px;
+    padding: 20px;
+}
+
+.card-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: #f0f6fc;
+}
+
+.card-desc {
+    font-size: 12px;
+    color: #8b949e;
+}
+
+.card-icon-box {
+    border-radius: 50%;
+    min-width: 42px;
+    min-height: 42px;
+}
+
+.card-icon-blue {
+    background-color: #1f3a5f;
+    color: #58a6ff;
+}
+
+.card-icon-purple {
+    background-color: #342054;
+    color: #bc8cff;
+}
+
+.card-icon-amber {
+    background-color: #432b13;
+    color: #f0883e;
+}
+
+.card-icon-rgb {
+    background-color: #1c2d42;
+    color: #79c0ff;
+}
+
+.info-banner {
+    background-color: #10151c;
+    border: 1px solid #1c2430;
+    border-radius: 8px;
+    padding: 10px 12px;
+    font-size: 11.5px;
+    color: #8b949e;
+}
+
+/* Sliders / Escalas */
+scale {
+    margin: 4px 0;
+}
+
+scale trough {
+    background-color: #21262d;
+    border-radius: 6px;
+    min-height: 7px;
+}
+
+/* Highlight preenchimento dos sliders */
+scale.slider-blue highlight {
+    background-color: #388bfd;
+    border-radius: 6px;
+}
+
+scale.slider-purple highlight {
+    background-color: #a371f7;
+    border-radius: 6px;
+}
+
+scale.slider-cyan highlight {
+    background-color: #39c5cf;
+    border-radius: 6px;
+}
+
+scale.slider-amber highlight {
+    background-color: #f0883e;
+    border-radius: 6px;
+}
+
+scale.slider-red highlight {
+    background-color: #f85149;
+    border-radius: 6px;
+}
+
+scale.slider-green highlight {
+    background-color: #3fb950;
+    border-radius: 6px;
+}
+
+scale.slider-blue-solid highlight {
+    background-color: #58a6ff;
+    border-radius: 6px;
+}
+
+scale slider {
+    background-color: #f0f6fc;
+    border: 2px solid #388bfd;
+    border-radius: 50%;
+    min-width: 16px;
+    min-height: 16px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.5);
+}
+
+.badge-tag {
+    font-size: 11px;
+    font-weight: 700;
+    color: #ffffff;
+    border-radius: 50%;
+    min-width: 22px;
+    min-height: 22px;
+}
+
+.badge-r { background-color: #da3633; }
+.badge-g { background-color: #238636; }
+.badge-b { background-color: #1f6feb; }
+
+.val-indicator {
+    font-size: 13px;
+    font-weight: 600;
+    color: #c9d1d9;
+}
+
+/* Switch / Chaves */
+switch:checked {
+    background-color: #58a6ff;
+}
+
+.switch-label {
+    font-size: 12px;
+    color: #8b949e;
+}
+
+/* Footer / Status */
+.bottom-bar {
+    background-color: #0b0f14;
+    border-top: 1px solid #161b22;
+    padding: 10px 24px;
+    font-size: 12px;
+    color: #8b949e;
+}
+
+.status-dot {
+    color: #3fb950;
+    font-size: 14px;
+}
