@@ -25,7 +25,8 @@ class MonitorControllerWindow(Adw.ApplicationWindow):
         super().__init__(*args, **kwargs)
 
         self.set_title("Gigabyte Monitor Controller")
-        self.set_default_size(1180, 760)
+        # Tamanho inicial ideal para caber perfeitamente tanto no 1366x768 quanto no 1920x1080
+        self.set_default_size(980, 620)
 
         self.user_color_preset_active = False
         self.night_mode_active = False
@@ -56,24 +57,21 @@ class MonitorControllerWindow(Adw.ApplicationWindow):
                 )
 
     def build_ui(self):
-        # Main vertical container (Window content + Footer)
         root_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
         self.set_content(root_box)
 
-        # Header bar nativa do GNOME Adwaita
         header = Adw.HeaderBar()
         header.set_show_title(False)
         root_box.append(header)
 
-        # Body com Split: Sidebar à esquerda, Conteúdo à direita
         body_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, hexpand=True, vexpand=True)
         root_box.append(body_box)
 
-        # 1. SIDEBAR
+        # 1. Sidebar
         sidebar = self.build_sidebar()
         body_box.append(sidebar)
 
-        # 2. ÁREA DE CONTEÚDO PRINCIPAL (Stack para páginas: Início, Configurações, Sobre)
+        # 2. Content Area
         self.stack = Gtk.Stack()
         self.stack.set_hexpand(True)
         self.stack.set_vexpand(True)
@@ -89,22 +87,22 @@ class MonitorControllerWindow(Adw.ApplicationWindow):
 
         body_box.append(self.stack)
 
-        # 3. BARRA DE STATUS INFERIOR (Footer)
+        # 3. Footer
         self.footer = self.build_footer()
         root_box.append(self.footer)
 
     def build_sidebar(self):
-        box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=16)
+        box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=12)
         box.add_css_class("sidebar")
-        box.set_size_request(240, -1)
+        box.set_size_request(200, -1)
 
         # App Brand
-        brand_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=12)
+        brand_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=10)
         brand_icon = Gtk.Image.new_from_icon_name("video-display-symbolic")
-        brand_icon.set_pixel_size(32)
+        brand_icon.set_pixel_size(26)
         brand_box.append(brand_icon)
 
-        text_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=2)
+        text_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=1)
         lbl_title = Gtk.Label(label="Gigabyte", xalign=0)
         lbl_title.add_css_class("sidebar-title")
         lbl_sub = Gtk.Label(label="Monitor Controller", xalign=0)
@@ -114,12 +112,10 @@ class MonitorControllerWindow(Adw.ApplicationWindow):
         brand_box.append(text_box)
         box.append(brand_box)
 
-        # Divisor
         box.append(Gtk.Separator(orientation=Gtk.Orientation.HORIZONTAL))
 
-        # Nav Buttons
-        nav_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
-        
+        # Navigation
+        nav_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=4)
         self.btn_nav_home = self.create_nav_button("go-home-symbolic", "Início", "home", active=True)
         self.btn_nav_settings = self.create_nav_button("emblem-system-symbolic", "Configurações", "settings")
         self.btn_nav_about = self.create_nav_button("help-about-symbolic", "Sobre", "about")
@@ -129,21 +125,21 @@ class MonitorControllerWindow(Adw.ApplicationWindow):
         nav_box.append(self.btn_nav_about)
         box.append(nav_box)
 
-        # Espaço flexível
         spacer = Gtk.Box(vexpand=True)
         box.append(spacer)
 
-        # Preview do Monitor no rodapé da Sidebar
-        device_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=8)
+        # Monitor preview badge
+        device_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=4)
         device_box.add_css_class("device-badge-box")
 
         preview_img = BASE_DIR / "assets" / "monitor_preview.png"
         if preview_img.exists():
             img_widget = Gtk.Image.new_from_file(str(preview_img))
+            img_widget.set_pixel_size(100)
             device_box.append(img_widget)
         else:
             def_icon = Gtk.Image.new_from_icon_name("video-display-symbolic")
-            def_icon.set_pixel_size(48)
+            def_icon.set_pixel_size(42)
             device_box.append(def_icon)
 
         lbl_dev = Gtk.Label(label="Gigabyte GS25F2", xalign=0.5)
@@ -183,15 +179,16 @@ class MonitorControllerWindow(Adw.ApplicationWindow):
         scrolled = Gtk.ScrolledWindow()
         scrolled.set_hexpand(True)
         scrolled.set_vexpand(True)
+        scrolled.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
 
-        content = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=24)
+        content = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=16)
         content.add_css_class("content-area")
         scrolled.set_child(content)
 
-        # Header Topo (Título + Status Pill)
+        # Header Top
         top_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=16)
         
-        title_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=4)
+        title_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=2)
         page_title = Gtk.Label(label="Controle total do seu monitor", xalign=0)
         page_title.add_css_class("page-title")
         page_sub = Gtk.Label(label="Ajuste o brilho, áudio, cores e muito mais, diretamente do seu desktop.", xalign=0)
@@ -200,7 +197,7 @@ class MonitorControllerWindow(Adw.ApplicationWindow):
         title_box.append(page_sub)
         top_box.append(title_box)
 
-        pill_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=6, valign=Gtk.Align.START, halign=Gtk.Align.END, hexpand=True)
+        pill_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=6, valign=Gtk.Align.CENTER, halign=Gtk.Align.END, hexpand=True)
         pill_box.add_css_class("status-badge")
         dot = Gtk.Label(label="●")
         dot.add_css_class("status-dot")
@@ -211,8 +208,9 @@ class MonitorControllerWindow(Adw.ApplicationWindow):
 
         content.append(top_box)
 
-        # Grid 2x2 com os 4 Cards
-        grid = Gtk.Grid(column_spacing=20, row_spacing=20, hexpand=True)
+        # Responsive Grid 2x2
+        grid = Gtk.Grid(column_spacing=16, row_spacing=16, hexpand=True)
+        grid.set_column_homogeneous(True)
         content.append(grid)
 
         card1 = self.build_card_essenciais()
@@ -229,11 +227,10 @@ class MonitorControllerWindow(Adw.ApplicationWindow):
 
     # --- CARD 1: CONTROLES ESSENCIAIS ---
     def build_card_essenciais(self):
-        card = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=16)
+        card = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
         card.add_css_class("feature-card")
 
-        # Header do Card
-        h_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=12)
+        h_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=10)
         icon_box = Gtk.Box(halign=Gtk.Align.CENTER, valign=Gtk.Align.CENTER)
         icon_box.add_css_class("card-icon-box")
         icon_box.add_css_class("card-icon-blue")
@@ -241,13 +238,12 @@ class MonitorControllerWindow(Adw.ApplicationWindow):
         icon_box.append(icon)
         h_box.append(icon_box)
 
-        t_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=2)
+        t_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=1)
         t_box.append(Gtk.Label(label="Controles Essenciais", xalign=0, css_classes=["card-title"]))
         t_box.append(Gtk.Label(label="Ajuste o que você mais usa.", xalign=0, css_classes=["card-desc"]))
         h_box.append(t_box)
         card.append(h_box)
 
-        # Sliders
         card.append(self.create_slider_row("Brilho (Backlight)", "display-brightness-symbolic", VCP_BRIGHTNESS, 0, 100, "slider-blue"))
         card.append(self.create_slider_row("Contraste", "contrast-symbolic", VCP_CONTRAST, 0, 100, "slider-purple"))
         card.append(self.create_slider_row("Volume P2", "audio-volume-high-symbolic", VCP_VOLUME, 0, 100, "slider-cyan"))
@@ -256,10 +252,10 @@ class MonitorControllerWindow(Adw.ApplicationWindow):
 
     # --- CARD 2: MODO QUARTO ESCURO ---
     def build_card_quarto_escuro(self):
-        card = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=16)
+        card = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
         card.add_css_class("feature-card")
 
-        h_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=12)
+        h_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=10)
         icon_box = Gtk.Box(halign=Gtk.Align.CENTER, valign=Gtk.Align.CENTER)
         icon_box.add_css_class("card-icon-box")
         icon_box.add_css_class("card-icon-purple")
@@ -267,13 +263,12 @@ class MonitorControllerWindow(Adw.ApplicationWindow):
         icon_box.append(icon)
         h_box.append(icon_box)
 
-        t_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=2, hexpand=True)
+        t_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=1, hexpand=True)
         t_box.append(Gtk.Label(label="Modo Quarto Escuro", xalign=0, css_classes=["card-title"]))
         t_box.append(Gtk.Label(label="Reduza o brilho residual do monitor em ambientes escuros.", xalign=0, css_classes=["card-desc"]))
         h_box.append(t_box)
 
-        # Switch + Label
-        sw_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=8, valign=Gtk.Align.CENTER)
+        sw_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=6, valign=Gtk.Align.CENTER)
         self.sw_dark = Gtk.Switch()
         self.sw_dark_lbl = Gtk.Label(label="Desativado", css_classes=["switch-label"])
         self.sw_dark.connect("state-set", self.on_switch_dark_toggled)
@@ -283,10 +278,8 @@ class MonitorControllerWindow(Adw.ApplicationWindow):
 
         card.append(h_box)
 
-        # Slider Dimmer
         card.append(self.create_slider_row("Atenuação Extra (Dimmer)", "night-light-symbolic", "dimmer", 10, 90, "slider-purple", is_internal=True, default_val=60))
 
-        # Banner de Ajuda
         info_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=8)
         info_box.add_css_class("info-banner")
         i_icon = Gtk.Image.new_from_icon_name("dialog-information-symbolic")
@@ -302,10 +295,10 @@ class MonitorControllerWindow(Adw.ApplicationWindow):
 
     # --- CARD 3: MODO NOTURNO ---
     def build_card_modo_noturno(self):
-        card = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=16)
+        card = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
         card.add_css_class("feature-card")
 
-        h_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=12)
+        h_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=10)
         icon_box = Gtk.Box(halign=Gtk.Align.CENTER, valign=Gtk.Align.CENTER)
         icon_box.add_css_class("card-icon-box")
         icon_box.add_css_class("card-icon-amber")
@@ -313,12 +306,12 @@ class MonitorControllerWindow(Adw.ApplicationWindow):
         icon_box.append(icon)
         h_box.append(icon_box)
 
-        t_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=2, hexpand=True)
+        t_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=1, hexpand=True)
         t_box.append(Gtk.Label(label="Modo Noturno (Luz Azul)", xalign=0, css_classes=["card-title"]))
         t_box.append(Gtk.Label(label="Proteja seus olhos durante a noite.", xalign=0, css_classes=["card-desc"]))
         h_box.append(t_box)
 
-        sw_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=8, valign=Gtk.Align.CENTER)
+        sw_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=6, valign=Gtk.Align.CENTER)
         self.sw_night = Gtk.Switch()
         self.sw_night_lbl = Gtk.Label(label="Desativado", css_classes=["switch-label"])
         self.sw_night.connect("state-set", self.on_switch_night_toggled)
@@ -345,10 +338,10 @@ class MonitorControllerWindow(Adw.ApplicationWindow):
 
     # --- CARD 4: CALIBRAÇÃO DE CORES (RGB) ---
     def build_card_calibracao_rgb(self):
-        card = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=16)
+        card = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
         card.add_css_class("feature-card")
 
-        h_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=12)
+        h_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=10)
         icon_box = Gtk.Box(halign=Gtk.Align.CENTER, valign=Gtk.Align.CENTER)
         icon_box.add_css_class("card-icon-box")
         icon_box.add_css_class("card-icon-rgb")
@@ -356,7 +349,7 @@ class MonitorControllerWindow(Adw.ApplicationWindow):
         icon_box.append(icon)
         h_box.append(icon_box)
 
-        t_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=2)
+        t_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=1)
         t_box.append(Gtk.Label(label="Calibração de Cores", xalign=0, css_classes=["card-title"]))
         t_box.append(Gtk.Label(label="Ajuste o ganho de cada canal de cor (RGB).", xalign=0, css_classes=["card-desc"]))
         h_box.append(t_box)
@@ -369,7 +362,7 @@ class MonitorControllerWindow(Adw.ApplicationWindow):
         return card
 
     def create_slider_row(self, title, icon_name, key, min_val, max_val, color_class, is_internal=False, is_rgb=False, default_val=50, badge_letter=None, badge_class=None):
-        box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=4)
+        box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=2)
 
         top_row = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=8)
         
@@ -394,6 +387,7 @@ class MonitorControllerWindow(Adw.ApplicationWindow):
         scale = Gtk.Scale.new_with_range(Gtk.Orientation.HORIZONTAL, min_val, max_val, 1)
         scale.set_value(default_val)
         scale.set_draw_value(False)
+        scale.set_hexpand(True)
         scale.add_css_class(color_class)
         scale.connect("value-changed", lambda s: self.on_scale_changed(key, s.get_value(), val_lbl, is_internal, is_rgb))
         box.append(scale)
@@ -404,7 +398,7 @@ class MonitorControllerWindow(Adw.ApplicationWindow):
         return box
 
     def build_footer(self):
-        footer = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=16)
+        footer = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=14)
         footer.add_css_class("bottom-bar")
 
         self.footer_dot = Gtk.Label(label="●")
@@ -425,7 +419,7 @@ class MonitorControllerWindow(Adw.ApplicationWindow):
         return footer
 
     def build_placeholder_page(self, title, desc):
-        box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=16, halign=Gtk.Align.CENTER, valign=Gtk.Align.CENTER)
+        box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=14, halign=Gtk.Align.CENTER, valign=Gtk.Align.CENTER)
         lbl = Gtk.Label(label=title)
         lbl.add_css_class("page-title")
         sub = Gtk.Label(label=desc, justify=Gtk.Justification.CENTER)
@@ -434,7 +428,6 @@ class MonitorControllerWindow(Adw.ApplicationWindow):
         box.append(sub)
         return box
 
-    # --- LÓGICA DE EVENTOS ---
     def set_status(self, text):
         def _update():
             self.footer_status.set_label(text)
@@ -488,7 +481,6 @@ class MonitorControllerWindow(Adw.ApplicationWindow):
         else:
             self.set_status("Aviso ao comunicar com o monitor.")
 
-    # --- TOGGLES DE MODO ---
     def on_switch_dark_toggled(self, switch, state):
         self.extra_dark_active = state
         self.sw_dark_lbl.set_label("Ativado" if state else "Desativado")
